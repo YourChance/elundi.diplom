@@ -1,0 +1,13 @@
+syntax: glob
+
+*.obj
+*.exe
+*.user
+*.txt
+*.XML
+*.sln
+.hg/
+bin/
+obj/
+Debug/
+Release/
