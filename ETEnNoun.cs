@@ -31,7 +31,7 @@ namespace ETEnTranslator
 			AnalyzeChislo(ref slovo);
 			AnalyzeRod(ref slovo);
 			FindOsnova(ref slovo);
-            GetTranslate(ref slovo);
+            //GetTranslate(ref slovo);
             SetExtraData(ref slovo);
 		}
 
@@ -210,6 +210,8 @@ namespace ETEnTranslator
         public Slovo Translate(Predlozhenie pr, int place)
         {
             Slovo analyzed = pr[place];
+
+            GetTranslate(ref analyzed);
 
             return analyzed;
         }

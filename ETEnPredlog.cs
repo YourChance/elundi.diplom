@@ -20,7 +20,7 @@ namespace ETEnTranslator
         }
         protected void PreAnalyze(Predlozhenie pr, int place, ref Slovo slovo)
         {
-            GetTranslate(ref slovo);
+            //GetTranslate(ref slovo);
             SetExtraData(ref slovo);
         }
         private void SetExtraData(ref Slovo slovo)
@@ -58,6 +58,27 @@ namespace ETEnTranslator
         public Slovo Translate(Predlozhenie pr, int place)
         {
             Slovo analyzed = pr[place];
+
+            bool translated = false;
+
+            if (analyzed.eSlovo == "FQV" || analyzed.eSlovo == "FZJ" || analyzed.eSlovo == "FZP")
+            {
+                analyzed.enSlovo.slovo = "";
+                translated = true;
+            }
+            else if (analyzed.eSlovo == "FT")
+            {
+                if (place - 1 > 0 && pr[place - 1].eSlovo[0] != 'Q')
+                {
+                    analyzed.enSlovo.slovo = "";
+                    translated = true;
+                }
+            }
+
+            if (!translated)
+            {
+                GetTranslate(ref analyzed);
+            }
 
             return analyzed;
         }

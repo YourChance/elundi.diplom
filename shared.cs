@@ -353,6 +353,11 @@ using System.Data;
 					return (Slovo)slova[n];
 				else return null;
 			}
+            set
+            {
+                if (n >= 0 && n < slova.Count)
+                    slova[n] = value;
+            }
 		}
 		public void SetSlovo(Slovo s,int i)
 		{

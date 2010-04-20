@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data.SQLite;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace ETEnTranslator
 {
@@ -29,7 +30,7 @@ namespace ETEnTranslator
         protected void PreAnalyze(Predlozhenie pr, int place, ref Slovo slovo)
         {
             AnalyzeGlagol(pr, place, ref slovo);
-            GetTranslate(ref slovo);
+            //GetTranslate(ref slovo);
             SetExtraData(ref slovo);
         }
 
@@ -64,6 +65,115 @@ namespace ETEnTranslator
             glagol.sostoyanie = slovo.sostoynie; 
             glagol.english = slovo.enSlovo.slovo;
             slovo.ExtraData = glagol;
+        }
+
+        static string TireSame(string str)
+        {
+            string temp = str;
+            bool tire = true;
+            Match match = null;
+            while (tire)
+            {
+                tire = false;
+                if ((match = OsEl(temp, @"\-{2,}")).Success)
+                {
+                    tire = true;
+                    temp = match.Groups["часть1"].Value + "-" + match.Groups["часть3"].Value;
+                }
+            }
+            if (temp[temp.Length - 1] == '-') temp = temp.Substring(0, temp.Length - 1);
+            return temp;
+        }
+
+        static Match OsEl(string el, string suffix)
+        {
+            Regex reg = new Regex(@"(?<часть1>.*)(?<часть2>" + suffix + ")(?<часть3>.*)");
+            return reg.Match(el);
+        }
+
+        /// <summary>
+        /// ставит глагол на Эльюнди в начальную форму(необходимо для поиска слова в словаре-там всё в инфинитиве)
+        /// </summary>
+        /// <param name="el">глагол</param>
+        /// <returns>возвращает инфинитив</returns>
+        public static string OsnovaEl(string el)
+        {
+            if (el.Length < 3) return el;
+            string logOsnovaEl = "\nсоздание основы для " + el;
+            string temp = el;
+            Match match = null;
+            bool find = true;
+            while (find)
+            {
+                find = false;
+                if ((match = OsEl(temp, @"\-(A|S|F|J)\-")).Success)
+                {
+                    switch (match.Groups["часть2"].Value)
+                    {
+                        case "-A-": logOsnovaEl += "\nудалён суффикс возвратного залога '"; break;
+                        case "-S-": logOsnovaEl += "\nудалён суффикс совершенного вида '"; break;
+                        case "-F-": logOsnovaEl += "\nудалён суффикс страдательного залога '"; break;
+                        case "-J-": logOsnovaEl += "\nудалён суффикс повелительного наклонения '"; break;
+                    }
+                    logOsnovaEl += match.Groups["часть2"].Value + "'";
+                    temp = match.Groups["часть1"].Value + "-" + match.Groups["часть3"].Value;
+                    find = true;
+                }
+                if ((match = OsEl(temp, @"\-((RBY)|(SCY)|(TVY)|(PVI)|(PVS)|(UCS)|(SBA)|(RBA)|(TBA)|(YBA)|(UBA))")).Success)
+                {
+                    switch (match.Groups["часть2"].Value)
+                    {
+                        case "-RBY": logOsnovaEl += "\nудалён корень однократности '"; break;
+                        case "-SCY": logOsnovaEl += "\nудалён корень начала действия '"; break;
+                        case "-TVY": logOsnovaEl += "\nудалён безличный суффикс '"; break;
+                        case "-PVI": logOsnovaEl += "\nудалён корень ограничения длительности '"; break;
+                        case "-PVS": logOsnovaEl += "\nудалён корень неопределённой длительности '"; break;
+                        case "-UCS": logOsnovaEl += "\nудалён корень незавершённости '"; break;
+                        case "-SBA": logOsnovaEl += "\nудалён корень (суффикс/префикс) взаимного залога '"; break;
+                        default: logOsnovaEl += "\nудалён временной суффикс '"; break;
+                    }
+                    logOsnovaEl += match.Groups["часть2"].Value + "'";
+                    temp = match.Groups["часть1"].Value + "-" + match.Groups["часть3"].Value;
+                    find = true;
+                }
+                temp = TireSame(temp);
+            }
+            if (temp[2] == '-')
+                switch (temp[1])
+                {
+                    case 'A':
+                        logOsnovaEl += "\nудалён префикс возвратного залога 'A'";
+                        temp = "R" + temp.Substring(2);
+                        break;
+                    case 'S':
+                        logOsnovaEl += "\nудалён префикс совершенного вида 'S'";
+                        temp = "R" + temp.Substring(2);
+                        break;
+                }
+            if (temp[temp.Length - 2] == '-')
+                switch (temp[temp.Length - 1])
+                {
+                    case 'A':
+                        logOsnovaEl += "\nудалён суффикс возвратного залога 'A'";
+                        temp = temp.Substring(0, temp.Length - 2);
+                        break;
+                    case 'F':
+                        logOsnovaEl += "\nудалён суффикс страдательного залога 'F'";
+                        temp = temp.Substring(0, temp.Length - 2);
+                        break;
+                    case 'J':
+                        logOsnovaEl += "\nудалён суффикс повелительного наклонения 'J'";
+                        temp = temp.Substring(0, temp.Length - 2);
+                        break;
+                    case 'S':
+                        logOsnovaEl += "\nудалён суффикс совершенного вида 'S'";
+                        temp = temp.Substring(0, temp.Length - 2);
+                        break;
+                }
+            temp = "R" + TireSame(temp).Substring(1);
+            // if (temp[1] == '-' && temp.Length < 5&&temp[2]=='Q') temp = "R" + temp.Substring(2);
+            logOsnovaEl += "\nНачальная форма: < " + temp + " >";
+            return temp;
         }
 
         protected void AnalyzeGlagol(Predlozhenie pr, int place, ref Slovo slovo)
@@ -202,6 +312,9 @@ namespace ETEnTranslator
                     default: break;
                 }
             }
+
+            slovo.eSlovo = OsnovaEl(slovo.eSlovo);
+
             logOsnovaEl += "\n***Характеристики*** " + "\nЧисло: " + slovo.chislo.ToString() + "\nНаклонение: " + slovo.naklonenie.ToString() + "\nРод: " + slovo.rod.ToString() + "\nСостояние: " + slovo.sostoynie.ToString() + "\nВид: " + slovo.vid.ToString() + "\nВремя: " + slovo.vremya.ToString() + "\nЗалог: " + slovo.zalog.ToString();
         }
        /* 
@@ -235,6 +348,8 @@ namespace ETEnTranslator
         public Slovo Translate(Predlozhenie pr, int place)
         {
             Slovo analyzed = pr[place];
+
+            GetTranslate(ref analyzed);
 
             return analyzed;
         }

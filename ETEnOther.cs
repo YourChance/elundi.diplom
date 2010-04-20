@@ -23,7 +23,7 @@ namespace ETEnTranslator
         protected void PreAnalyze(Predlozhenie pr, int place, ref Slovo slovo)
         {
             //CopyCharact(pr, place, ref slovo);
-            GetTranslate(ref slovo);
+            //GetTranslate(ref slovo);
             SetExtraData(ref slovo);
         }
 
@@ -78,6 +78,8 @@ namespace ETEnTranslator
         public Slovo Translate(Predlozhenie pr, int place)
         {
             Slovo analyzed = pr[place];
+
+            GetTranslate(ref analyzed);
 
             return analyzed;
         }

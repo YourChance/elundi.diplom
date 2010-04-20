@@ -240,11 +240,92 @@ namespace ETEnTranslator
             return prText;
         }
 
+        protected String NormalizeText(string inText)
+        {
+            ArrayList wordList = GetMorphology(inText);
+            string resultText = "";
+            for (int i = 0; i < wordList.Count; i++)
+            {
+                Predlozhenie curPred = (Predlozhenie)wordList[i];
+                /**
+                 * Что считать нормальным порядком слов в предложении?
+                 * Подлежащее сказуемое а дальше.. хз что дальше..
+                 * Хотя для английского наиболее важны только подлежаще и сказуемое.
+                 * Лан. Забиваем на остальные части речи пока
+                 */
+                /**
+                 * Ищем подлежащее и сказуемое
+                 * Что считать подлежащим?
+                 * Первое найденное существительное или местоимение, перед которым не стоит предлог
+                 * Если перед существительным стоит прилагательное (определяющее слово), то переносим
+                 * его вместе с подлежащим в начало
+                 * Что считать сказуемым?
+                 * Ближайший к подлежащему глагол
+                 */
+                Slovo predSlovo = null;
+                Slovo podlejashee = null;
+                int podlejashee_index = -1;
+                Slovo skazuemoe = null;
+                int skazuemoe_index = -1;
+                Slovo adjective = null;
+                int adjective_index = -1;
+                for (int j = 0; j < curPred.Count; j++)
+                {
+                    Slovo curSlovo = curPred[j];
+                    if (podlejashee_index < 0 && (curSlovo.chastRechi == ChastRechi.Suschestvitelnoe || curSlovo.chastRechi == ChastRechi.Mestoimenie) &&
+                        (predSlovo == null || predSlovo.chastRechi != ChastRechi.Predlog))
+                    {
+                        podlejashee = curSlovo;
+                        podlejashee_index = j;
+                        if (predSlovo != null && predSlovo.chastRechi == ChastRechi.Prilagatelnoe)
+                        {
+                            adjective = predSlovo;
+                            adjective_index = j - 1;
+                        }
+                    }
+                    if (curSlovo.chastRechi == ChastRechi.Glagol)
+                    {
+                        skazuemoe = curSlovo;
+                        skazuemoe_index = j;
+                        if (podlejashee_index >= 0)
+                            break; //мы все нашли
+                    }
+                    predSlovo = curSlovo;
+                }
+                int hasAdjective = adjective_index >= 0 ? 1 : 0;
+                if (adjective_index >= 0 && curPred.Count > 1)
+                {
+                    for (int t = adjective_index; t > 0; t--)
+                        curPred[t] = curPred[t - 1];
+                    curPred[0] = adjective;
+                }
+                if (podlejashee_index >= 0 && curPred.Count > 1 + hasAdjective)
+                {
+                    for (int t = podlejashee_index; t > hasAdjective; t--)
+                        curPred[t] = curPred[t - 1];
+                    curPred[hasAdjective] = podlejashee;
+                }
+                if (skazuemoe_index >= 0 && curPred.Count > 2 + hasAdjective)
+                {
+                    if (skazuemoe_index < podlejashee_index)
+                        skazuemoe_index += 1 + hasAdjective;
+                    for (int t = skazuemoe_index; t > 1 + hasAdjective; t--)
+                        curPred[t] = curPred[t - 1];
+                    curPred[hasAdjective + 1] = skazuemoe;
+                }
+                resultText += curPred.ToEString() + " ";
+            }
+            return resultText.Trim();
+        }
+
         /**
          * Собственно, перевод..
          */
         public string Translate(string inText)
         {
+            //Перед тем как переводить, приведем текст в нормальную форму
+            inText = NormalizeText(inText);
+
             Grafemat gr = new Grafemat();
             ArrayList prText = gr.AnalyzeTextEl(inText);
 
@@ -284,6 +365,7 @@ namespace ETEnTranslator
                                     curSlovo.chastRechi = ChastRechi.Suschestvitelnoe;
                                     break;
                                 case 'F':
+                                case 'P':
                                     curSlovo.chastRechi = ChastRechi.Predlog;
                                     break;
                                 case 'E':

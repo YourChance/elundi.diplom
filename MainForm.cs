@@ -97,9 +97,9 @@ namespace ETRTranslator
 		
 		void Mess()
 		{
-			System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\log.txt");
-			sw.WriteLine(mess);
-			sw.Close();
+			//System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\log.txt");
+			//sw.WriteLine(mess);
+			//sw.Close();
 		}
 		
 		void SetElText()
