@@ -35,13 +35,13 @@ namespace ETEnTranslator
             command.CommandText = "SELECT eng FROM dict WHERE el=@el";
             command.Parameters.Add(new SQLiteParameter("el", slovo.eSlovo));
             SQLiteDataReader reader = command.ExecuteReader();
-            if (reader.HasRows && reader.Read() && !reader.IsDBNull(0))
+            if (reader.HasRows && reader.Read())
             {
                 slovo.enSlovo.slovo = reader.GetString(0);
             }
             else
             {
-                slovo.enSlovo.slovo = "[Нет перевода]";
+                slovo.enSlovo.slovo = "[Нет перевода для "+slovo.eSlovo+"]";
             }
             reader.Close();
             connection.Close();

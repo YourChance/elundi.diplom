@@ -45,7 +45,7 @@ namespace ETEnTranslator
             }
             else
             {
-                slovo.enSlovo.slovo = "[Нет перевода]";
+                slovo.enSlovo.slovo = "[Нет перевода для " + slovo.eSlovo + "]";
             }
             reader.Close();
             connection.Close();

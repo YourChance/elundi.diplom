@@ -48,7 +48,7 @@ namespace ETEnTranslator
             }
             else
             {
-                slovo.enSlovo.slovo = "[Нет перевода]";
+                slovo.enSlovo.slovo = "[Нет перевода для " + slovo.eSlovo + "]";
             }
             reader.Close();
             connection.Close();
@@ -313,9 +313,65 @@ namespace ETEnTranslator
                 }
             }
 
-            slovo.eSlovo = OsnovaEl(slovo.eSlovo);
+            if (slovo.chastRechi == ChastRechi.Glagol)
+                slovo.eSlovo = OsnovaEl(slovo.eSlovo);
+            else
+                slovo.eSlovo = OsnovaElPrich(slovo.eSlovo);
 
             logOsnovaEl += "\n***Характеристики*** " + "\nЧисло: " + slovo.chislo.ToString() + "\nНаклонение: " + slovo.naklonenie.ToString() + "\nРод: " + slovo.rod.ToString() + "\nСостояние: " + slovo.sostoynie.ToString() + "\nВид: " + slovo.vid.ToString() + "\nВремя: " + slovo.vremya.ToString() + "\nЗалог: " + slovo.zalog.ToString();
+        }
+
+        private string OsnovaElPrich(string p)
+        {
+                string osnova = p;
+
+                osnova = osnova.Replace("-SVA", "");   // взaимный зaлог
+                osnova = osnova.Replace("-TYU", "");  // Нaстоящее время
+                osnova = osnova.Replace("-YYU", "");  // Прошедшее время
+                osnova = osnova.Replace("-UYU", "");  // Будущее время
+                osnova = osnova.Replace("-RBA", "");  // для постоянного или длительного времени
+                osnova = osnova.Replace("-TBA", "");  // для нaстоящего времени
+                osnova = osnova.Replace("-YBA", "");  // для прошедшего времени
+                osnova = osnova.Replace("-UBA", "");  // для будущего времени
+                osnova = osnova.Replace("-RBY", "");  // Однокрaтность
+                osnova = osnova.Replace("-SCY", "");  // Нaчaло действия
+                osnova = osnova.Replace("-PVI", "");  // Огрaничение длительности
+                osnova = osnova.Replace("-PVS", "");  // Неопределеннaя длительность
+                osnova = osnova.Replace("-RBA", "");  // Постояннaя длительность
+                osnova = osnova.Replace("-UCS", "");  // Незaвершенность действия
+
+                if (osnova[osnova.Length - 1] == 'J' && osnova[osnova.Length - 2] == '-')
+                    osnova = osnova.Remove(osnova.Length - 2, 2);       // Повелительное нaклонение
+                if (osnova[1] == 'S' && osnova[2] == '-')              //зaвершенность действия
+                    osnova = osnova.Remove(1, 1);
+                if (osnova[osnova.Length - 1] == 'S' && osnova[osnova.Length - 2] == '-')
+                    osnova = osnova.Remove(osnova.Length - 2, 2);       //зaвершенность
+
+                /*
+                if (osnova[1] == 'A' && osnova[2] == '-')                   //Возврaтный зaлог
+                    osnova = osnova.Remove(1, 1);*/
+                if (osnova[osnova.Length - 1] == 'A')
+                    osnova = osnova.Remove(osnova.Length - 2, 2);       //Возврaтный зaлог
+
+
+                if (osnova[osnova.Length - 1] == 'F' && osnova[osnova.Length - 2] == '-')
+                    osnova = osnova.Remove(osnova.Length - 1, 1);       //Стрaдaтельный зaлог
+
+
+                /*      for (int i = 0; i < osnova.Length; i++)
+                      {
+                          if (osnova[i] == '-')
+                          {
+                              osnova = osnova.Remove(i, 1);
+                              i--;
+                          }
+                      }
+       * */
+                osnova = osnova.Remove(0, 1);
+                osnova = "R" + osnova;
+                //MessageBox.Show(osnova);
+
+                return osnova;
         }
        /* 
         private void NaklSoslag()//

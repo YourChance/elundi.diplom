@@ -269,18 +269,30 @@ namespace ETEnTranslator
                 int skazuemoe_index = -1;
                 Slovo adjective = null;
                 int adjective_index = -1;
+
+                string[] личныеместоимения = new string[] { "Q-", "W", "E-", "T-", "R-", "U", "I-", "Y" };
+
                 for (int j = 0; j < curPred.Count; j++)
                 {
+                    if (podlejashee_index < 0 && j > 5)
+                        break;
+
                     Slovo curSlovo = curPred[j];
-                    if (podlejashee_index < 0 && (curSlovo.chastRechi == ChastRechi.Suschestvitelnoe || curSlovo.chastRechi == ChastRechi.Mestoimenie) &&
+                    if (podlejashee_index < 0 && (curSlovo.chastRechi == ChastRechi.Suschestvitelnoe || Array.Exists<String>(личныеместоимения, new Predicate<String>(delegate(String str)
+                    {
+                        return str == curSlovo.eSlovo;
+                    }))) &&
                         (predSlovo == null || predSlovo.chastRechi != ChastRechi.Predlog))
                     {
                         podlejashee = curSlovo;
                         podlejashee_index = j;
-                        if (predSlovo != null && predSlovo.chastRechi == ChastRechi.Prilagatelnoe)
+                        if (predSlovo != null)
                         {
-                            adjective = predSlovo;
-                            adjective_index = j - 1;
+                            if (predSlovo.chastRechi == ChastRechi.Prilagatelnoe)
+                            {
+                                adjective = predSlovo;
+                                adjective_index = j - 1;
+                            }
                         }
                     }
                     if (curSlovo.chastRechi == ChastRechi.Glagol)
@@ -421,7 +433,7 @@ namespace ETEnTranslator
                     if (curSlovo.chastRechi != ChastRechi.Znak)
                     {
                         string eSlovo = curSlovo.eSlovo;
-                        if (eSlovo[0] == 'R' || eSlovo[0] == 'T' || eSlovo[0] == 'Y' || eSlovo[0] == 'U')
+                        if (eSlovo[0] == 'R' || eSlovo[0] == 'T' || eSlovo[0] == 'Y' || eSlovo[0] == 'U' || eSlovo[0] == 'I')
                         {
                             curSlovo = VerbModule.Analyze(curPred, j);
                             Scet++;
@@ -443,7 +455,7 @@ namespace ETEnTranslator
                         //
                         // Заменить на соответствующее для данной части речи.
                         //
-                        if (eSlovo[0] == 'E' || eSlovo[0] == 'I')
+                        if (eSlovo[0] == 'E')
                         {
                             curSlovo = AdjectiveModule.Analyze(curPred, j);
                             Scet++;
@@ -486,8 +498,6 @@ namespace ETEnTranslator
                                 curSlovo = AdjectiveModule.Translate(curPred, j);
                                 break;
                             case ChastRechi.Prichastie:
-                                curSlovo = AdjectiveModule.Translate(curPred, j);
-                                break;
                             case ChastRechi.Glagol:
                                 curSlovo = VerbModule.Translate(curPred, j);
                                 break;
@@ -495,6 +505,8 @@ namespace ETEnTranslator
                                 curSlovo = PredlogModule.Translate(curPred, j);
                                 break;
                             case ChastRechi.Mestoimenie:
+                            case ChastRechi.Mezhdometie:
+                            case ChastRechi.Narechie:
                                 curSlovo = OtherModule.Translate(curPred, j);
                                 break;
                             default:
