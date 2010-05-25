@@ -43,6 +43,23 @@ using System.Data;
         }
     }
 
+    public struct Deeprichastie
+    {
+        public string english;
+        public string osnova;
+        public Vremya vremya;
+        public Zalog zalog;
+        public string new_engl;
+        public override string ToString()
+        {
+            return "\r\nОснова: " + this.osnova +
+                   "\r\nПеревод: " + this.english +
+                   "\r\nВремя: " + this.vremya +
+                   "\r\nЗалог: " + this.zalog +
+                   "\r\nСлово: " + this.new_engl;
+        }
+    }
+
     public struct Mestoimenie
     {
         public string english;

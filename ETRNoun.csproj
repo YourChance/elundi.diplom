@@ -77,6 +77,7 @@
     <Compile Include="EmptyModule.cs" />
     <Compile Include="ETEnAdjective.cs" />
     <Compile Include="ETEnCore.cs" />
+    <Compile Include="ETEnDeeprich.cs" />
     <Compile Include="ETEnGlagol.cs" />
     <Compile Include="ETEnNoun.cs" />
     <Compile Include="ETEnOther.cs" />
