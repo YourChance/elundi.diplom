@@ -12,7 +12,7 @@ namespace ETEnTranslator
         string logOsnovaEl;
         Predlozhenie predl = null;
         int pozition_predl = 0;
-        //Slovo slovo;
+        Slovo slovo;
 
         public ETEnGlagol()
         {}
@@ -44,7 +44,7 @@ namespace ETEnTranslator
             SQLiteDataReader reader = command.ExecuteReader();
             if (reader.HasRows && reader.Read() && !reader.IsDBNull(0))
             {
-                slovo.enSlovo.slovo = reader.GetString(0);
+                slovo.enSlovo.slovo = Processing(reader.GetString(0));
             }
             else
             {
@@ -56,7 +56,6 @@ namespace ETEnTranslator
 
         private void SetExtraData(ref Slovo slovo)
         {
-
             Glagol glagol = new Glagol();
             glagol.vremya = slovo.vremya;
             glagol.zalog = slovo.zalog;
@@ -408,6 +407,536 @@ namespace ETEnTranslator
             GetTranslate(ref analyzed);
 
             return analyzed;
+        }
+
+        string Processing(string infin)
+        {
+            string stroka = infin;
+            string stroka_copy = stroka;
+            try
+            {
+                if (slovo.zalog == Zalog.Dejstvitekniy)
+                {
+                    if (slovo.vid == Vid.Mgnovennost)
+                    {
+                        // преобразования для Indefenite
+                        if (slovo.vremya == Vremya.Nastoyaschee)
+                        {
+                            if (stroka == "be")
+                            {
+                                if (slovo.chislo == Chislo.Edinstvennoe)
+                                {
+                                    if (slovo.lico == Lico.Первое)
+                                        stroka = "am";
+                                    else
+                                        stroka = "is";
+                                }
+                                else
+                                    stroka = "are";
+                            }
+                            else if (slovo.lico == Lico.Третье && slovo.chislo == Chislo.Edinstvennoe)
+                            {
+                                    char[] slovo1 = stroka.ToCharArray();
+                                    if (slovo1[slovo1.Length - 1] == 's' || slovo1[slovo1.Length - 1] == 'x' || slovo1[slovo1.Length - 1] == 'z' || slovo1[slovo1.Length - 1] == 'o' || slovo1[slovo1.Length - 1] == 'h' && slovo1[slovo1.Length - 2] == 's' || slovo1[slovo1.Length - 1] == 'h' && slovo1[slovo1.Length - 2] == 'c')
+                                        stroka = stroka + "es";
+                                    else if (slovo1[slovo1.Length - 1] == 'f')
+                                    {
+                                        stroka = slovo1[0].ToString();
+                                        for (int i = 1; i < slovo1.Length - 1; i++)
+                                            stroka = stroka + slovo1[i].ToString();
+                                        stroka = stroka + "ves";
+                                    }
+                                    else if (slovo1[slovo1.Length - 1] == 'e' && slovo1[slovo1.Length - 2] == 'f')
+                                    {
+                                        stroka = slovo1[0].ToString();
+                                        for (int i = 1; i < slovo1.Length - 2; i++)
+                                            stroka = stroka + slovo1[i].ToString();
+                                        stroka = stroka + "ves";
+                                    }
+                                    else if (slovo1[slovo1.Length - 1] == 'y' && slovo1[slovo1.Length - 2] > 97 && slovo1[slovo1.Length - 2] < 101
+                                        || slovo1[slovo1.Length - 1] == 'y' && slovo1[slovo1.Length - 2] > 101 && slovo1[slovo1.Length - 2] < 105
+                                        || slovo1[slovo1.Length - 1] == 'y' && slovo1[slovo1.Length - 2] > 105 && slovo1[slovo1.Length - 2] < 111
+                                        || slovo1[slovo1.Length - 1] == 'y' && slovo1[slovo1.Length - 2] > 111 && slovo1[slovo1.Length - 2] < 117
+                                        || slovo1[slovo1.Length - 1] == 'y' && slovo1[slovo1.Length - 2] > 117 && slovo1[slovo1.Length - 2] < 121
+                                        || slovo1[slovo1.Length - 1] == 'y' && slovo1[slovo1.Length - 2] == 'z')
+                                    {
+                                        stroka = slovo1[0].ToString();
+                                        for (int i = 1; i < slovo1.Length - 1; i++)
+                                            stroka = stroka + slovo1[i].ToString();
+                                        stroka = stroka + "ies";
+                                    }
+                                    else
+                                        stroka = stroka + 's';
+                            }
+                        }
+                        else if (slovo.vremya == Vremya.Buduschee)
+                        {
+                                if (slovo.lico == Lico.Первое)
+                                    stroka = "shall " + stroka;
+                                else
+                                    stroka = "will " + stroka;
+                        }
+                        else if (slovo.vremya == Vremya.Proshedshee)
+                        {
+                                // образование второй формы глагола (V2)
+                                SQLiteConnection con = new SQLiteConnection(@"Data Source=non_verbs.sqlitedb;Version=3;");
+                                con.Open();
+                                SQLiteCommand com = new SQLiteCommand(con);
+                                com.CommandText = "SELECT v2 FROM verbs WHERE v1=@str";
+                                com.Parameters.Add(new SQLiteParameter("str", stroka));
+                                SQLiteDataReader reader = com.ExecuteReader();
+                                if (reader.HasRows)
+                                {
+                                    reader.Read();
+                                    if (!reader.IsDBNull(0))
+                                    {
+                                        stroka = reader.GetString(0);
+                                        if (stroka == "was,were")
+                                        {
+                                            if (slovo.chislo == Chislo.Mnozhestvennoe)
+                                                stroka = "were";
+                                            else
+                                                stroka = "was";
+                                        }
+                                    }
+                                }
+                                else
+                                    stroka = V_ed(stroka);
+                                reader.Close();
+                                con.Close();
+                        }
+                        /* ??????????????????????????????????????????????????????????????????????????
+                         * else if (slovo.vremya == "Будущее в прошедшем (Future in the Past)")
+                         {
+                            // if (radioButton6.Checked == true)
+                             // если предложение в утвердительной форме
+                             {
+                                 if (slovo.lico == Lico.Первое)
+                                     stroka = "should " + stroka;
+                                 else
+                                     stroka = "would " + stroka;
+                             }
+                             /* else if (radioButton7.Checked == true)
+                              {
+                                  if (slovo.lico == Lico.Первое)
+                                      stroka = "should ... " + stroka;
+                                  else
+                                      stroka = "would ... " + stroka;
+                              }
+                              else if (radioButton8.Checked == true)
+                              {
+                                  if (slovo.lico == Lico.Первое)
+                                      stroka = "shouldn't " + stroka;
+                                  else
+                                      stroka = "wouldn't " + stroka;
+                              }*
+                         }*/
+                        // преобразования для Indefenite
+                    }
+                    else if (slovo.vid == Vid.NachaloDejstviya || slovo.vid == Vid.PostoyannayaDlitelnost || slovo.vid == Vid.NeopredelennayaDlitelnost)
+                    {
+                        // преобразования для Continuous
+                        if (slovo.vremya == Vremya.Nastoyaschee)
+                        {
+                            if (slovo.chislo == Chislo.Edinstvennoe)
+                            {
+                                if (slovo.lico == Lico.Первое)
+                                    stroka = "am ";
+                                else
+                                    stroka = "is ";
+                            }
+                            else
+                                stroka = "are ";
+                        }
+                        else if (slovo.vremya == Vremya.Buduschee)
+                        {
+                                if (slovo.lico == Lico.Первое)
+                                    stroka = "shall be ";
+                                else
+                                    stroka = "will be ";
+                        }
+                        else if (slovo.vremya == Vremya.Proshedshee)
+                        {
+                            if (slovo.chislo == Chislo.Mnozhestvennoe)
+                                stroka = "were ";
+                            else
+                                stroka = "was ";
+                        }
+                        /* else if (slovo.vremya == "Будущее в прошедшем (Future in the Past)")
+                         {
+                             //if (radioButton6.Checked == true)
+                             {
+                                 if (slovo.lico == Lico.Первое)
+                                     stroka = "should be ";
+                                 else
+                                     stroka = "would be ";
+                             }
+                             /*else if (radioButton7.Checked == true)
+                             {
+                                 if (slovo.lico == Lico.Первое)
+                                     stroka = "should ... be ";
+                                 else
+                                     stroka = "would ... be ";
+                             }
+                             else if (radioButton8.Checked == true)
+                             {
+                                 if (slovo.lico == Lico.Первое)
+                                     stroka = "shouldn't be ";
+                                 else
+                                     stroka = "wouldn't be ";
+                             }
+                         }*/
+                        stroka = stroka + V_ing(stroka_copy);
+                    }
+                    else if (slovo.vid == Vid.Zavershennost || slovo.vid == Vid.NevozvratnayaZavershennost)
+                    {
+                        // преобразования для Perfect
+                        if (slovo.vremya == Vremya.Nastoyaschee)
+                        {
+                            if (slovo.chislo == Chislo.Edinstvennoe && slovo.lico == Lico.Третье)
+                                stroka = "has ";
+                            else
+                                stroka = "have ";
+                        }
+                        else if (slovo.vremya == Vremya.Buduschee)
+                        {
+                                if (slovo.lico == Lico.Первое)
+                                    stroka = "shall have ";
+                                else
+                                    stroka = "will have ";
+                        }
+                        else if (slovo.vremya == Vremya.Proshedshee)
+                        {
+                            stroka = "had ";
+                        }
+                        /* else if (slovo.vremya == "Будущее в прошедшем (Future in the Past)")
+                         {
+                            // if (radioButton6.Checked == true)
+                             {
+                                 if (slovo.lico == Lico.Первое)
+                                     stroka = "should have ";
+                                 else
+                                     stroka = "would have ";
+                             }
+                             /* else if (radioButton7.Checked == true)
+                              {
+                                  if (slovo.lico == Lico.Первое)
+                                      stroka = "should ... have ";
+                                  else
+                                      stroka = "would ... have ";
+                              }
+                              else if (radioButton8.Checked == true)
+                              {
+                                  if (slovo.lico == Lico.Первое)
+                                      stroka = "shouldn't have ";
+                                  else
+                                      stroka = "wouldn't have ";
+                              }
+                         }*/
+                        stroka = stroka + Viii(stroka_copy);
+                    }
+                    else if (slovo.vid == Vid.NezavershennostDejstviya || slovo.vid == Vid.OgranichenieDlitelnosti)
+                    {
+                        // преобразование для Perfect-Continuous
+                        if (slovo.vremya == Vremya.Nastoyaschee)
+                        {
+                            if (slovo.chislo == Chislo.Edinstvennoe && slovo.lico == Lico.Третье)
+                                stroka = "has ";
+                            else
+                                stroka = "have ";
+                        }
+                        else if (slovo.vremya == Vremya.Buduschee)
+                        {
+                                if (slovo.lico == Lico.Первое)
+                                    stroka = "shall have ";
+                                else
+                                    stroka = "will have ";
+                        }
+                        else if (slovo.vremya == Vremya.Proshedshee)
+                        {
+                            stroka = "had ";
+                        }
+                        /* else if (slovo.vremya == "Будущее в прошедшем (Future in the Past)")
+                         {
+                             //if (radioButton6.Checked == true)
+                             {
+                                 if (slovo.lico == Lico.Первое)
+                                     stroka = "should have ";
+                                 else
+                                     stroka = "would have ";
+                             }
+                             /* else if (radioButton7.Checked == true)
+                              {
+                                  if (slovo.lico == Lico.Первое)
+                                      stroka = "should ... have ";
+                                  else
+                                      stroka = "would ... have ";
+                              }
+                              else if (radioButton8.Checked == true)
+                              {
+                                  if (slovo.lico == Lico.Первое)
+                                      stroka = "shouldn't have ";
+                                  else
+                                      stroka = "wouldn't have ";
+                              }
+                         }*/
+                        stroka = stroka + "been " + V_ing(stroka_copy);
+                    }
+                }
+                //---------------------------------------------------------------------------------------------
+                else if (slovo.zalog == Zalog.Stradatelniy)
+                {
+                    // преобразование слова для страдательного залога
+                    if (slovo.vid == Vid.Mgnovennost)
+                    {
+                        // преобразования для Indefenite
+                        if (slovo.vremya == Vremya.Nastoyaschee)
+                        {
+                            if (slovo.chislo == Chislo.Edinstvennoe)
+                            {
+                                if (slovo.lico == Lico.Первое)
+                                    stroka = "am ";
+                                else
+                                    stroka = "is ";
+                            }
+                            else
+                                stroka = "are ";
+                        }
+                        else if (slovo.vremya == Vremya.Buduschee)
+                        {
+                                if (slovo.lico == Lico.Первое)
+                                    stroka = "shall be ";
+                                else
+                                    stroka = "will be ";
+                        }
+                        else if (slovo.vremya == Vremya.Proshedshee)
+                        {
+                            if (slovo.chislo == Chislo.Mnozhestvennoe)
+                                stroka = "were ";
+                            else
+                                stroka = "was ";
+                        }
+                        /*  else if (slovo.vremya == "Будущее в прошедшем (Future in the Past)")
+                          {
+                              //if (radioButton6.Checked == true)
+                              // если предложение в утвердительной форме
+                              {
+                                  if (slovo.lico == Lico.Первое)
+                                      stroka = "should be ";
+                                  else
+                                      stroka = "would be ";
+                              }
+                              /* else if (radioButton7.Checked == true)
+                               {
+                                   if (slovo.lico == Lico.Первое)
+                                       stroka = "should ... be ";
+                                   else
+                                       stroka = "would ... be ";
+                               }
+                               else if (radioButton8.Checked == true)
+                               {
+                                   if (slovo.lico == Lico.Первое)
+                                       stroka = "shouldn't be ";
+                                   else
+                                       stroka = "wouldn't be ";
+                               }
+                              // преобразования для Indefenite
+                          }*/
+                    }
+                    else if (slovo.vid == Vid.NachaloDejstviya || slovo.vid == Vid.PostoyannayaDlitelnost || slovo.vid == Vid.NeopredelennayaDlitelnost)
+                    {
+                        // преобразования для Continuous
+                        if (slovo.vremya == Vremya.Nastoyaschee)
+                        {
+                            if (slovo.chislo == Chislo.Edinstvennoe)
+                            {
+                                if (slovo.lico == Lico.Первое)
+                                    stroka = "am being ";
+                                else
+                                    stroka = "is being ";
+                            }
+                            else
+                                stroka = "are being ";
+                        }
+                        else if (slovo.vremya == Vremya.Buduschee)
+                        {
+                            stroka = "!!! EROR !!!";
+                        }
+                        else if (slovo.vremya == Vremya.Proshedshee)
+                        {
+                            if (slovo.chislo == Chislo.Mnozhestvennoe)
+                                stroka = "were being ";
+                            else
+                                stroka = "was being ";
+                        }
+                        /* else if (slovo.vremya == "Будущее в прошедшем (Future in the Past)")
+                         {
+                             stroka = "!!! EROR !!!";
+                         }*/
+                    }
+                    else if (slovo.vid == Vid.Zavershennost || slovo.vid == Vid.NevozvratnayaZavershennost)
+                    {
+                        // преобразования для Perfect
+                        if (slovo.vremya == Vremya.Nastoyaschee)
+                        {
+                                if (slovo.chislo == Chislo.Edinstvennoe && slovo.lico == Lico.Третье)
+                                    stroka = "has been ";
+                                else
+                                    stroka = "have been ";
+                         }
+                        else if (slovo.vremya == Vremya.Buduschee)
+                        {
+                               if (slovo.lico == Lico.Первое)
+                                    stroka = "shall have been ";
+                                else
+                                    stroka = "will have been ";
+                        }
+                        else if (slovo.vremya == Vremya.Proshedshee)
+                        {
+                            stroka = "had been ";
+                        }
+                        /* else if (slovo.vremya == "Будущее в прошедшем (Future in the Past)")
+                         {
+                             //if (radioButton6.Checked == true)
+                             {
+                                 if (slovo.lico == Lico.Первое)
+                                     stroka = "should have been ";
+                                 else
+                                     stroka = "would have been ";
+                             }
+                             /* else if (radioButton7.Checked == true)
+                              {
+                                  if (slovo.lico == Lico.Первое)
+                                      stroka = "should ... have been ";
+                                  else
+                                      stroka = "would ... have been ";
+                              }
+                              else if (radioButton8.Checked == true)
+                              {
+                                  if (slovo.lico == Lico.Первое)
+                                      stroka = "shouldn't have been ";
+                                  else
+                                      stroka = "wouldn't have been ";
+                              }
+                         }*/
+                    }
+                    else if (slovo.vid == Vid.NezavershennostDejstviya || slovo.vid == Vid.OgranichenieDlitelnosti)
+                    {
+                        stroka = "!!! EROR !!!";
+                    }
+                    if (stroka != "!!! EROR !!!")
+                        stroka = stroka + Viii(stroka_copy);
+                }
+            }
+            catch
+            { }
+            return stroka;
+        }
+        
+        public string V_ed(string stroka)
+        // метод преобразования глагола при добавлении окончания "-ed"
+        {
+            char[] slovo = stroka.ToCharArray();
+            if (slovo[slovo.Length - 1] == 'e')
+                stroka = stroka + "d";
+            else if (slovo[slovo.Length - 1] == 'y')
+            {
+                stroka = slovo[0].ToString();
+                for (int i = 1; i < slovo.Length - 1; i++)
+                    stroka = stroka + slovo[i].ToString();
+                stroka = stroka + "ied";
+            }
+            else if (slovo[slovo.Length - 1] == 'd' && slovo[slovo.Length - 2] != 'd' || slovo[slovo.Length - 1] == 'p' && slovo[slovo.Length - 2] != 'p' || slovo[slovo.Length - 1] == 't' && slovo[slovo.Length - 2] != 't' || slovo[slovo.Length - 1] == 'l' && slovo[slovo.Length - 2] != 'l')
+            {
+                if (slovo[slovo.Length - 2] == 'o' || slovo[slovo.Length - 1] == 'a' || slovo[slovo.Length - 1] == 'e' || slovo[slovo.Length - 1] == 'u' || slovo[slovo.Length - 1] == 'i' || slovo[slovo.Length - 1] == 'y')
+                {
+                    if (slovo[slovo.Length - 3] != 'o' || slovo[slovo.Length - 3] != 'a' || slovo[slovo.Length - 3] != 'e' || slovo[slovo.Length - 3] != 'u' || slovo[slovo.Length - 3] != 'i' || slovo[slovo.Length - 3] != 'y')
+                        stroka = stroka + slovo[slovo.Length - 1] + "ed";
+                }
+                else
+                    stroka = stroka + "ed";
+            }
+            else
+                stroka = stroka + "ed";
+            return stroka;
+        }
+
+        public string Viii(string stroka)
+        {
+            // метод преобразования глагола в 3-ью форму глагола
+            SQLiteConnection con = new SQLiteConnection(@"Data Source=non_verbs.sqlitedb;Version=3;");
+            con.Open();
+            SQLiteCommand com = new SQLiteCommand(con);
+            com.CommandText = "SELECT v3 FROM verbs WHERE v1=@str";
+            com.Parameters.Add(new SQLiteParameter("str", stroka));
+            SQLiteDataReader reader = com.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                if (!reader.IsDBNull(0))
+                {
+                    stroka = reader.GetString(0);
+                }
+            }
+            else
+                stroka = V_ed(stroka);
+            reader.Close();
+            con.Close();
+            return stroka;
+        }
+
+        public string V_ing(string stroka)
+        // метод преобразования глагола при добавлении окончания "-ing"
+        {
+            if (stroka != "be")
+            {
+                SQLiteConnection con = new SQLiteConnection(@"Data Source=non_verbs.sqlitedb;Version=3;");
+                con.Open();
+                SQLiteCommand com = new SQLiteCommand(con);
+                com.CommandText = "SELECT v4 FROM verbs WHERE v1=@str";
+                com.Parameters.Add(new SQLiteParameter("str", stroka));
+                SQLiteDataReader reader = com.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    if (!reader.IsDBNull(0))
+                    {
+                        stroka = reader.GetString(0);
+                    }
+                }
+                else
+                {
+                    char[] slovo = stroka.ToCharArray();
+                    if (slovo[slovo.Length - 1] == 'e')
+                    {
+                        for (int i = 0; i < slovo[slovo.Length - 1]; i++)
+                            stroka = stroka + slovo[i].ToString();
+                        stroka = stroka + "ing";
+                    }
+                    else if (slovo[slovo.Length - 1] == 'e' && slovo[slovo.Length - 2] == 'i')
+                    {
+                        stroka = slovo[0].ToString();
+                        for (int i = 1; i < slovo.Length - 2; i++)
+                            stroka = stroka + slovo[i].ToString();
+                        stroka = stroka + "ying";
+                    }
+                    else if (slovo[slovo.Length - 1] == 'n' && slovo[slovo.Length - 2] != 'n' || slovo[slovo.Length - 1] == 'p' && slovo[slovo.Length - 2] != 'p' || slovo[slovo.Length - 1] == 't' && slovo[slovo.Length - 2] != 't' || slovo[slovo.Length - 1] == 'l' && slovo[slovo.Length - 2] != 'l')
+                    {
+                        if (slovo[slovo.Length - 2] == 'o' || slovo[slovo.Length - 1] == 'a' || slovo[slovo.Length - 1] == 'e' || slovo[slovo.Length - 1] == 'u' || slovo[slovo.Length - 1] == 'i' || slovo[slovo.Length - 1] == 'y')
+                        {
+                            if (slovo[slovo.Length - 3] != 'o' || slovo[slovo.Length - 3] != 'a' || slovo[slovo.Length - 3] != 'e' || slovo[slovo.Length - 3] != 'u' || slovo[slovo.Length - 3] != 'i' || slovo[slovo.Length - 3] != 'y')
+                                stroka = stroka + slovo[slovo.Length - 1] + "ing";
+                        }
+                        else
+                            stroka = stroka + "ing";
+                    }
+                    else
+                        stroka = stroka + "ing";
+                }
+                reader.Close();
+                con.Close();
+            }
+            return stroka;
         }
     }
 }

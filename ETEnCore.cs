@@ -12,6 +12,7 @@ namespace ETEnTranslator
         IModule PredlogModule;
         IModule DefaultModule;
         IModule OtherModule;
+        IModule DeeprichModule;
 
         public event CoreTickEventHandler Tick;
         public event CoreEndEventHandler End;
@@ -38,6 +39,7 @@ namespace ETEnTranslator
             PredlogModule = new ETEnPredlog();
             DefaultModule = new ETEnEmpty(); //new ETEnDefault();
             OtherModule = new ETEnOther();
+            DeeprichModule = new ETEnDeeprich();
 		}
 
         public ArrayList Analyze(string inText)
@@ -89,9 +91,11 @@ namespace ETEnTranslator
 							case 'T':
 							case 'Y':
 							case 'U':
-							case 'O':
 								curSlovo.chastRechi = ChastRechi.Glagol;
 								break;
+                            case 'O':
+                                curSlovo.chastRechi = ChastRechi.Deeprichastie;
+                                break;
 							//etc...
 							default:
 								curSlovo.chastRechi = ChastRechi.Mezhdometie;
@@ -131,6 +135,10 @@ namespace ETEnTranslator
 						{
 							curSlovo = VerbModule.Analyze(curPred,j);	
 						}
+                        else if (eSlovo[0] == 'O')
+                        {
+                            curSlovo = DeeprichModule.Analyze(curPred, j);
+                        }
 					}
 					
 					curPred.SetSlovo(curSlovo,j);
