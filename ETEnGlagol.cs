@@ -36,6 +36,7 @@ namespace ETEnTranslator
 
         private void GetTranslate(ref Slovo slovo)
         {
+            this.slovo = slovo;
             SQLiteConnection connection = new SQLiteConnection(@"Data Source=dict.sqlitedb;Version=3;");
             connection.Open();
             SQLiteCommand command = new SQLiteCommand(connection);
