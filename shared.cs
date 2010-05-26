@@ -32,6 +32,8 @@ using System.Data;
         public Naklonenie naklonenie;
         public Vid vid;
         public Sostoynie sostoyanie;
+        public Lico lico;
+        public Chislo chislo;
         public override string ToString()
         {
             return "\r\nПеревод: " + this.english +
@@ -39,7 +41,9 @@ using System.Data;
                    "\r\nЗалог: " + this.zalog +
                    "\r\nНаклонение: " + this.naklonenie +
                    "\r\nВид: " + this.vid +
-                   "\r\nСостояние: " + this.sostoyanie;
+                   "\r\nСостояние: " + this.sostoyanie+
+                   "\r\nЛисо: " + this.lico+
+                   "\r\nЧисло: " + this.chislo;
         }
     }
 
