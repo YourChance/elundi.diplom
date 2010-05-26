@@ -4,6 +4,7 @@ using System.Text;
 using System.Data.SQLite;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace ETEnTranslator
 {
@@ -29,6 +30,7 @@ namespace ETEnTranslator
 
         protected void PreAnalyze(Predlozhenie pr, int place, ref Slovo slovo)
         {
+            AnalyzeCharacteristicsFromNoun(pr, place, ref slovo);
             AnalyzeGlagol(pr, place, ref slovo);
             //GetTranslate(ref slovo);
             SetExtraData(ref slovo);
@@ -62,7 +64,9 @@ namespace ETEnTranslator
             glagol.zalog = slovo.zalog;
             glagol.naklonenie = slovo.naklonenie;
             glagol.vid = slovo.vid;
-            glagol.sostoyanie = slovo.sostoynie; 
+            glagol.sostoyanie = slovo.sostoynie;
+            glagol.chislo = slovo.chislo;
+            glagol.lico = slovo.lico;
             glagol.english = slovo.enSlovo.slovo;
             slovo.ExtraData = glagol;
         }
@@ -193,6 +197,19 @@ namespace ETEnTranslator
                 }
            // NaklSoslag();
             string[] temp = slovo.eSlovo.Split('-');
+            switch (temp[0][0])
+            {
+                case 'T':
+                    slovo.vremya = Vremya.Nastoyaschee;
+                    break;
+                case 'Y':
+                    slovo.vremya = Vremya.Proshedshee;
+                    break;
+                case 'U':
+                    slovo.vremya = Vremya.Buduschee;
+                    break;
+                default: break;
+            }
             if (temp[0].Length == 1 && temp.Length > 1)
             {
                 switch (temp[1])
@@ -414,9 +431,10 @@ namespace ETEnTranslator
         {
             string stroka = infin;
             string stroka_copy = stroka;
+            Vremia_eng();
             try
             {
-                if (slovo.zalog == Zalog.Dejstvitekniy)
+                if (slovo.zalog == Zalog.Dejstvitekniy || slovo.zalog == Zalog.Vozvratniy || slovo.zalog == Zalog.Vzaimniy)
                 {
                     if (slovo.vid == Vid.Mgnovennost)
                     {
@@ -938,6 +956,112 @@ namespace ETEnTranslator
                 con.Close();
             }
             return stroka;
+        }
+
+        public void Vremia_eng()
+        {
+            switch (slovo.vremya)
+            {
+                case Vremya.BuduscheeDalekoe:
+                case Vremya.BuduscheeDlitelnoe:
+                case Vremya.BuduscheeVNastoyaschem:
+                case Vremya.BuduscheeSProshedshim:
+                    slovo.vremya = Vremya.Buduschee;
+                    break;
+                case Vremya.NastoyascheeDlitelnoe:
+                case Vremya.NastoyascheeSBuduschim:
+                case Vremya.NastoyascheeSProshedshim:
+                case Vremya.NastoyascheeVNastoyaschem:
+                case Vremya.Postoyannoe:
+                    slovo.vremya = Vremya.Nastoyaschee;
+                    break;
+                case Vremya.ProshedsheeBuduscheeBezNastoyaschego:
+                case Vremya.ProshedsheeDlitelnoe:
+                case Vremya.ProshedsheeSNastoyaschim:
+                case Vremya.Davnoproshedshee:
+                    slovo.vremya = Vremya.Proshedshee;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        protected void AnalyzeCharacteristicsFromNoun(Predlozhenie pr, int place, ref Slovo analyzed)
+        {
+            // поиск в предложении существительного
+            //и копировaние его хaрaктеристик (родa, числa, пaдежa) Прилaгaтельное
+            int max = place + 4 > pr.Count - 1 ? pr.Count - 1 : place + 4;
+            int min = place - 4 > 0 ? place - 4 : 0;
+            int such = 0;
+
+            if (analyzed.chastRechi == ChastRechi.Glagol && pr.Count > 1)
+            {
+                Hashtable sush = new Hashtable();
+                for (int i = min; i < max; i++)
+                {
+                    Slovo slovpoisk = pr[i];
+                    if (slovpoisk.chastRechi == ChastRechi.Suschestvitelnoe)
+                    {
+                        sush[i] = slovpoisk; such = 1;
+                        //System.Windows.Forms.MessageBox.Show(slovpoisk.rSlovo);
+                    }
+                    else if (slovpoisk.chastRechi == ChastRechi.Mestoimenie)
+                        such = 2;
+                }
+                Slovo res = null;
+                int minres = 999;
+
+                foreach (int j in sush.Keys)
+                {
+                    if (Math.Abs(place - j) < minres || (Math.Abs(place - j) == minres && j > place))
+                    {
+                        res = (Slovo)sush[j];
+                        minres = Math.Abs(place - j);
+                    }
+                }
+                if (res != null)
+                {
+                    if (such == 1)
+                    {
+                        analyzed.chislo = res.chislo;
+                        analyzed.lico = Lico.Третье;
+                    }
+                    else if (such == 2)
+                    {
+                        if (res.eSlovo == "Q-" || res.eSlovo == "Q-Q") //местоимение "Я"
+                        {
+                            analyzed.chislo = Chislo.Edinstvennoe;
+                            analyzed.lico = Lico.Первое;
+                        }
+                        else if (res.eSlovo == "Y") //местоимение "Мы"
+                        {
+                            analyzed.chislo = Chislo.Mnozhestvennoe;
+                            analyzed.lico = Lico.Первое;
+                        }
+                        else if (res.eSlovo == "W" || res.eSlovo == "U") //местоимение "Ты,Вы"
+                        {
+                            analyzed.chislo = Chislo.Mnozhestvennoe;
+                            analyzed.lico = Lico.Второе;
+                        }
+                        else if (res.eSlovo == "E-" || res.eSlovo == "T-" || res.eSlovo == "R-") //местоимение "Он,Она,Оно"
+                        {
+                            analyzed.chislo = Chislo.Edinstvennoe;
+                            analyzed.lico = Lico.Третье;
+                        }
+                        else if (res.eSlovo == "I-") //местоимение "Они"
+                        {
+                            analyzed.chislo = Chislo.Mnozhestvennoe;
+                            analyzed.lico = Lico.Третье;
+                        }
+                    }
+                }
+                else
+                {
+                    analyzed.chislo = Chislo.Edinstvennoe;
+                    analyzed.lico = Lico.Третье;
+                }
+            }
+
         }
     }
 }
