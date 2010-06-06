@@ -33,7 +33,7 @@ namespace ETRTranslator
 			
 			if(analyzed.chastRechi != ChastRechi.Znak)
 			{
-				ArrayList al = pr.Dict.GetStrictRusEx(analyzed.eSlovo);
+				ArrayList al = pr.Dict.GetStrictRusEx(analyzed.rSlovo);
 	            if(al.Count > 0)
 				{
 					analyzed.eSlovo = ((DictSlovo)al[0]).El;
