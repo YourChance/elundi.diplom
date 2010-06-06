@@ -111,7 +111,7 @@ namespace ETEnTranslator
 				for(int j=0;j<curPred.Count;j++)
 				{
 					Slovo curSlovo = curPred[j];
-					if(curSlovo.chastRechi != ChastRechi.Znak)
+					if(curSlovo.chastRechi != ChastRechi.Znak && curSlovo.chastRechi != ChastRechi.Mestoimenie)
 					{
 						string eSlovo = curSlovo.eSlovo;
 						if(eSlovo[0]=='Q' || eSlovo[0]=='W')
@@ -148,7 +148,7 @@ namespace ETEnTranslator
 				for(int j=0;j<curPred.Count;j++)
 				{
 					Slovo curSlovo = curPred[j];
-					if(curSlovo.chastRechi != ChastRechi.Znak)
+					if(curSlovo.chastRechi != ChastRechi.Znak && curSlovo.chastRechi != ChastRechi.Mestoimenie)
 					{
 						string eSlovo = curSlovo.eSlovo;
 						
@@ -375,7 +375,7 @@ namespace ETEnTranslator
                     if (curSlovo.chastRechi != ChastRechi.Znak)
                     {
                         string eSlovo = curSlovo.eSlovo;
-                        if (eSlovo.Length == 1)
+                        if (eSlovo.Length == 1 || eSlovo.Length == 2 && eSlovo[1] == '-')
                             curSlovo.chastRechi = ChastRechi.Mestoimenie;
                         else
                             switch (eSlovo[0])
@@ -419,7 +419,7 @@ namespace ETEnTranslator
                 for (int j = 0; j < curPred.Count; j++)
                 {
                     Slovo curSlovo = curPred[j];
-                    if (curSlovo.chastRechi != ChastRechi.Znak)
+                    if (curSlovo.chastRechi != ChastRechi.Znak && curSlovo.chastRechi != ChastRechi.Mestoimenie)
                     {
                         string eSlovo = curSlovo.eSlovo;
                         if (eSlovo[0] == 'Q' || eSlovo[0] == 'W')
@@ -438,7 +438,7 @@ namespace ETEnTranslator
                 for (int j = 0; j < curPred.Count; j++)
                 {
                     Slovo curSlovo = curPred[j];
-                    if (curSlovo.chastRechi != ChastRechi.Znak)
+                    if (curSlovo.chastRechi != ChastRechi.Znak && curSlovo.chastRechi != ChastRechi.Mestoimenie)
                     {
                         string eSlovo = curSlovo.eSlovo;
                         if (eSlovo[0] == 'R' || eSlovo[0] == 'T' || eSlovo[0] == 'Y' || eSlovo[0] == 'U' || eSlovo[0] == 'I')
@@ -456,7 +456,7 @@ namespace ETEnTranslator
                 for (int j = 0; j < curPred.Count; j++)
                 {
                     Slovo curSlovo = curPred[j];
-                    if (curSlovo.chastRechi != ChastRechi.Znak)
+                    if (curSlovo.chastRechi != ChastRechi.Znak && curSlovo.chastRechi != ChastRechi.Mestoimenie)
                     {
                         string eSlovo = curSlovo.eSlovo;
 

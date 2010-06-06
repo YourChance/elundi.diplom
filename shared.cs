@@ -193,7 +193,11 @@ using System.Data;
 		OgranichenieDlitelnosti,
 		NeopredelennayaDlitelnost,
 		PostoyannayaDlitelnost,
-		NezavershennostDejstviya
+        NezavershennostDejstviya,
+        Indefinite,
+        Continuous,
+        Perfect,
+        Perfect_Continuous
 	}
 	
 	public enum Zalog
@@ -221,7 +225,11 @@ using System.Data;
 		BuduscheeDlitelnoe,
 		BuduscheeVNastoyaschem,
 		BuduscheeSProshedshim,
-		BuduscheeDalekoe
+        BuduscheeDalekoe,
+        Present,
+        Past,
+        Future,
+        Future_Past
 	}
 	
 	public enum Naklonenie
@@ -511,7 +519,7 @@ using System.Data;
 		
 		public string CreateNewSlovo(Slovo slovo)
 		{
-			int i = 1;
+			/*int i = 1;
 			try
 			{
 				StreamReader sr = new StreamReader("newslovo.ini");
@@ -523,9 +531,9 @@ using System.Data;
 				i=1;
 			}
 			int j = i+1;
-			string bukvi = "QWERTYUIOPASDFGHJKLZXCVBN";
-			string newslovo = "";
-			
+			string bukvi = "QWERTYUIOPASDFGHJKLZXCVBN";*/
+			string newslovo = " non ";
+			/*
 			switch(slovo.chastRechi)
 			{
 				case ChastRechi.Suschestvitelnoe:
@@ -578,13 +586,13 @@ using System.Data;
 			StreamWriter sw = new StreamWriter(fs);
 			sw.WriteLine(j.ToString());
 			sw.Close();
-
+            */
 			return newslovo;
 		}
 		
 		public string CreateNewSlovoEx(Slovo slovo)
 		{
-			int i = 1;
+			/*int i = 1;
 			try
 			{
 				StreamReader sr = new StreamReader("newslovo.ini");
@@ -596,10 +604,10 @@ using System.Data;
 				i=1;
 			}
 			int j = i+1;
-			string bukvi = "QWERTYUIOPASDFGHJKLZXCVBN";
-			string newslovo = "";
+			string bukvi = "QWERTYUIOPASDFGHJKLZXCVBN";*/
+			string newslovo = "non";
 			
-			switch(slovo.chastRechi)
+			/*switch(slovo.chastRechi)
 			{
 				case ChastRechi.Suschestvitelnoe:
 					newslovo += "Q-";
@@ -651,7 +659,7 @@ using System.Data;
 			StreamWriter sw = new StreamWriter(fs);
 			sw.WriteLine(j.ToString());
 			sw.Close();
-
+            */
 			return newslovo;
 		}
 		
