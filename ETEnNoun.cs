@@ -213,6 +213,72 @@ namespace ETEnTranslator
 
             GetTranslate(ref analyzed);
 
+            //Если число множественное, то изменяем окончание
+            if (analyzed.chislo != Chislo.Edinstvennoe && analyzed.chislo != Chislo.Odinochnoe)
+            {
+                bool isSpecial = false;
+                switch (analyzed.enSlovo.slovo)
+                {
+                    case "man":
+                        analyzed.enSlovo.slovo = "men";
+                        isSpecial = true;
+                        break;
+                    case "woman":
+                        analyzed.enSlovo.slovo = "women";
+                        isSpecial = true;
+                        break;
+                    case "mouse":
+                        analyzed.enSlovo.slovo = "mice";
+                        isSpecial = true;
+                        break;
+                    case "tooth":
+                        analyzed.enSlovo.slovo = "teeth";
+                        isSpecial = true;
+                        break;
+                    case "foot":
+                        analyzed.enSlovo.slovo = "feet";
+                        isSpecial = true;
+                        break;
+                    case "child":
+                        analyzed.enSlovo.slovo = "children";
+                        isSpecial = true;
+                        break;
+                    case "ox":
+                        analyzed.enSlovo.slovo = "oxen";
+                        isSpecial = true;
+                        break;
+                    case "goose":
+                        analyzed.enSlovo.slovo = "geese";
+                        isSpecial = true;
+                        break;
+                    case "sheep":
+                        analyzed.enSlovo.slovo = "sheep";
+                        isSpecial = true;
+                        break;
+                    case "deer":
+                        analyzed.enSlovo.slovo = "deer";
+                        isSpecial = true;
+                        break;
+                    case "swine":
+                        analyzed.enSlovo.slovo = "swine";
+                        isSpecial = true;
+                        break;
+                }
+                if (!isSpecial)
+                {
+                    if (analyzed.enSlovo.slovo.EndsWith("f"))
+                        analyzed.enSlovo.slovo = analyzed.enSlovo.slovo.Substring(0, analyzed.enSlovo.slovo.Length - 1) + "ves";
+                    else if (analyzed.enSlovo.slovo.EndsWith("fe"))
+                        analyzed.enSlovo.slovo = analyzed.enSlovo.slovo.Substring(0, analyzed.enSlovo.slovo.Length - 2) + "ves";
+                    else if (analyzed.enSlovo.slovo.EndsWith("o"))
+                        analyzed.enSlovo.slovo += "es";
+                    else if (analyzed.enSlovo.slovo.EndsWith("y"))
+                        analyzed.enSlovo.slovo = analyzed.enSlovo.slovo.Substring(0, analyzed.enSlovo.slovo.Length - 1) + "ies";
+                    else
+                        analyzed.enSlovo.slovo += "s";
+                }
+            }
+
             return analyzed;
         }
 	}
