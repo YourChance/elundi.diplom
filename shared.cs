@@ -395,9 +395,45 @@ using System.Data;
         public string ToEnString()
         {
             StringBuilder sb = new StringBuilder();
+
+            int predSlovo = -1;
+            int predStart = 0;
+
+            //убираем пустые слова
+            List<Slovo> neWords = new List<Slovo>();
             foreach (Slovo s in slova)
-                sb.Append(s.enSlovo.slovo + " "/*+"("+s.chastRechi.ToString()+") "*/);
-            return sb.ToString();
+            {
+                if (s.enSlovo.slovo != "")
+                    neWords.Add(s);
+            }
+            
+            for(int i = 0; i < neWords.Count;i++)
+            {
+                Slovo s = neWords[i];
+
+                if (s.padezh == Padezh.Prityazhatelnij)
+                {
+                    while (predSlovo != -1 && neWords[predSlovo].chastRechi == ChastRechi.Prilagatelnoe)
+                    {
+                        predStart -= neWords[predSlovo--].enSlovo.slovo.Length + 1;
+                    }
+
+                    if(neWords[predSlovo].chastRechi == ChastRechi.Suschestvitelnoe)
+                        sb.Insert(predStart, "of ");
+                }
+
+                if (i == 0)
+                    s.enSlovo.slovo = s.enSlovo.slovo[0].ToString().ToUpper() + s.enSlovo.slovo.Substring(1);
+
+                sb.Append(s.enSlovo.slovo + " "/*+"("+ s.padezh + ") "*//*+"("+s.chastRechi.ToString()+") "*/);
+
+                predStart = sb.Length;
+                predSlovo = i;
+            }
+            String resultStr = sb.ToString().Trim();
+            if(resultStr.Length > 0)
+                return resultStr + ". ";
+            return "";
         }
 
 		public string ToRString()
