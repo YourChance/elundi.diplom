@@ -6,6 +6,7 @@ syntax: glob
 *.txt
 *.XML
 *.sln
+*.orig
 .hg/
 bin/
 obj/
