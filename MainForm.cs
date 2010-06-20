@@ -487,5 +487,18 @@ namespace ETRTranslator
 			About a = new About();
 			a.Show();
 		}
+
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+
+            Add_to_db childForm = new Add_to_db();
+            childForm.FormClosed += new FormClosedEventHandler(childForm_FormClosed);
+            childForm.Show();
+            this.Enabled = false;
+        }
+        void childForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.Enabled = true;
+        }  
 	}
 }

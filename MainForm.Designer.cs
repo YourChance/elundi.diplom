@@ -71,12 +71,13 @@ namespace ETRTranslator
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.progressBar1 = new System.Windows.Forms.VerticalProgressBar();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.richTextBox3 = new System.Windows.Forms.RichTextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
+            this.progressBar1 = new System.Windows.Forms.VerticalProgressBar();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -105,37 +106,37 @@ namespace ETRTranslator
             this.toolStripMenuItem1,
             this.выходToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
             this.файлToolStripMenuItem.Text = "Файл";
             // 
             // новыйToolStripMenuItem
             // 
             this.новыйToolStripMenuItem.Name = "новыйToolStripMenuItem";
-            this.новыйToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.новыйToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.новыйToolStripMenuItem.Text = "Новый";
             this.новыйToolStripMenuItem.Click += new System.EventHandler(this.НовыйToolStripMenuItemClick);
             // 
             // открытьToolStripMenuItem
             // 
             this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.открытьToolStripMenuItem.Text = "Открыть";
             // 
             // сохранитьToolStripMenuItem
             // 
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(129, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(137, 6);
             // 
             // выходToolStripMenuItem
             // 
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.выходToolStripMenuItem.Text = "Выход";
             this.выходToolStripMenuItem.Click += new System.EventHandler(this.ВыходToolStripMenuItemClick);
             // 
@@ -147,34 +148,34 @@ namespace ETRTranslator
             this.вставитьToolStripMenuItem1,
             this.выделитьВсеToolStripMenuItem});
             this.правкаToolStripMenuItem.Name = "правкаToolStripMenuItem";
-            this.правкаToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
+            this.правкаToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.правкаToolStripMenuItem.Text = "Правка";
             // 
             // копироватьToolStripMenuItem
             // 
             this.копироватьToolStripMenuItem.Name = "копироватьToolStripMenuItem";
-            this.копироватьToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.копироватьToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.копироватьToolStripMenuItem.Text = "Копировать";
             this.копироватьToolStripMenuItem.Click += new System.EventHandler(this.КопироватьToolStripMenuItemClick);
             // 
             // вставитьToolStripMenuItem
             // 
             this.вставитьToolStripMenuItem.Name = "вставитьToolStripMenuItem";
-            this.вставитьToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.вставитьToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.вставитьToolStripMenuItem.Text = "Вырезать";
             this.вставитьToolStripMenuItem.Click += new System.EventHandler(this.ВставитьToolStripMenuItemClick);
             // 
             // вставитьToolStripMenuItem1
             // 
             this.вставитьToolStripMenuItem1.Name = "вставитьToolStripMenuItem1";
-            this.вставитьToolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
+            this.вставитьToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
             this.вставитьToolStripMenuItem1.Text = "Вставить";
             this.вставитьToolStripMenuItem1.Click += new System.EventHandler(this.ВставитьToolStripMenuItem1Click);
             // 
             // выделитьВсеToolStripMenuItem
             // 
             this.выделитьВсеToolStripMenuItem.Name = "выделитьВсеToolStripMenuItem";
-            this.выделитьВсеToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.выделитьВсеToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.выделитьВсеToolStripMenuItem.Text = "Выделить все";
             this.выделитьВсеToolStripMenuItem.Click += new System.EventHandler(this.ВыделитьВсеToolStripMenuItemClick);
             // 
@@ -183,7 +184,7 @@ namespace ETRTranslator
             this.видToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.панельМенюToolStripMenuItem});
             this.видToolStripMenuItem.Name = "видToolStripMenuItem";
-            this.видToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.видToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
             this.видToolStripMenuItem.Text = "Вид";
             // 
             // панельМенюToolStripMenuItem
@@ -192,7 +193,7 @@ namespace ETRTranslator
             this.панельМенюToolStripMenuItem.CheckOnClick = true;
             this.панельМенюToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.панельМенюToolStripMenuItem.Name = "панельМенюToolStripMenuItem";
-            this.панельМенюToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.панельМенюToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.панельМенюToolStripMenuItem.Text = "Панель меню";
             this.панельМенюToolStripMenuItem.Click += new System.EventHandler(this.ПанельМенюToolStripMenuItemClick);
             // 
@@ -205,40 +206,40 @@ namespace ETRTranslator
             this.elEnToolStripMenuItem,
             this.ruElEnToolStripMenuItem});
             this.переводToolStripMenuItem.Name = "переводToolStripMenuItem";
-            this.переводToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
+            this.переводToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
             this.переводToolStripMenuItem.Text = "Перевод";
             // 
             // ruElToolStripMenuItem
             // 
             this.ruElToolStripMenuItem.Name = "ruElToolStripMenuItem";
-            this.ruElToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.ruElToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.ruElToolStripMenuItem.Text = "Ru -> El";
             this.ruElToolStripMenuItem.Click += new System.EventHandler(this.RuElToolStripMenuItemClick);
             // 
             // ruElRuToolStripMenuItem
             // 
             this.ruElRuToolStripMenuItem.Name = "ruElRuToolStripMenuItem";
-            this.ruElRuToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.ruElRuToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.ruElRuToolStripMenuItem.Text = "Ru -> El -> Ru";
             this.ruElRuToolStripMenuItem.Click += new System.EventHandler(this.RuElRuToolStripMenuItemClick);
             // 
             // elRuToolStripMenuItem
             // 
             this.elRuToolStripMenuItem.Name = "elRuToolStripMenuItem";
-            this.elRuToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.elRuToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.elRuToolStripMenuItem.Text = "El -> Ru";
             this.elRuToolStripMenuItem.Click += new System.EventHandler(this.ElRuToolStripMenuItemClick);
             // 
             // elEnToolStripMenuItem
             // 
             this.elEnToolStripMenuItem.Name = "elEnToolStripMenuItem";
-            this.elEnToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.elEnToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.elEnToolStripMenuItem.Text = "El -> En";
             // 
             // ruElEnToolStripMenuItem
             // 
             this.ruElEnToolStripMenuItem.Name = "ruElEnToolStripMenuItem";
-            this.ruElEnToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.ruElEnToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.ruElEnToolStripMenuItem.Text = "Ru -> El -> En";
             // 
             // справкаToolStripMenuItem
@@ -247,7 +248,7 @@ namespace ETRTranslator
             this.помощьToolStripMenuItem,
             this.оПрограммеToolStripMenuItem});
             this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
+            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
             this.справкаToolStripMenuItem.Text = "Справка";
             // 
             // помощьToolStripMenuItem
@@ -271,6 +272,7 @@ namespace ETRTranslator
             this.toolStripButton1,
             this.toolStripButton2,
             this.toolStripButton3,
+            this.toolStripButton6,
             this.toolStripSeparator1,
             this.toolStripLabel1,
             this.toolStripComboBox1,
@@ -322,7 +324,7 @@ namespace ETRTranslator
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(138, 36);
+            this.toolStripLabel1.Size = new System.Drawing.Size(130, 36);
             this.toolStripLabel1.Text = "Направление перевода:";
             // 
             // toolStripComboBox1
@@ -385,19 +387,6 @@ namespace ETRTranslator
             this.tableLayoutPanel1.Size = new System.Drawing.Size(742, 308);
             this.tableLayoutPanel1.TabIndex = 15;
             // 
-            // progressBar1
-            // 
-            this.progressBar1.BackColor = System.Drawing.Color.Silver;
-            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar1.ForeColor = System.Drawing.Color.Gold;
-            this.progressBar1.Location = new System.Drawing.Point(725, 3);
-            this.progressBar1.Maximum = 1000;
-            this.progressBar1.Name = "progressBar1";
-            this.tableLayoutPanel1.SetRowSpan(this.progressBar1, 3);
-            this.progressBar1.Size = new System.Drawing.Size(14, 302);
-            this.progressBar1.TabIndex = 4;
-            this.progressBar1.Visible = false;
-            // 
             // richTextBox1
             // 
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -446,6 +435,29 @@ namespace ETRTranslator
             this.saveFileDialog1.DefaultExt = "rtf";
             this.saveFileDialog1.Filter = "Text files (*.rtf)|*.rtf";
             this.saveFileDialog1.RestoreDirectory = true;
+            // 
+            // toolStripButton6
+            // 
+            this.toolStripButton6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
+            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton6.Name = "toolStripButton6";
+            this.toolStripButton6.Size = new System.Drawing.Size(36, 36);
+            this.toolStripButton6.Text = "Добавиль новое слово в словарь";
+            this.toolStripButton6.Click += new System.EventHandler(this.toolStripButton6_Click);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.BackColor = System.Drawing.Color.Silver;
+            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.progressBar1.ForeColor = System.Drawing.Color.Gold;
+            this.progressBar1.Location = new System.Drawing.Point(725, 3);
+            this.progressBar1.Maximum = 1000;
+            this.progressBar1.Name = "progressBar1";
+            this.tableLayoutPanel1.SetRowSpan(this.progressBar1, 3);
+            this.progressBar1.Size = new System.Drawing.Size(14, 302);
+            this.progressBar1.TabIndex = 4;
+            this.progressBar1.Visible = false;
             // 
             // MainForm
             // 
@@ -508,5 +520,6 @@ namespace ETRTranslator
         private System.Windows.Forms.VerticalProgressBar progressBar1;
         private System.Windows.Forms.ToolStripMenuItem elEnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ruElEnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButton6;
 	}
 }
