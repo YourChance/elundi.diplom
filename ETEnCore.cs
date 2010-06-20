@@ -333,6 +333,14 @@ namespace ETEnTranslator
                         curPred[t] = curPred[t - 1];
                     curPred[hasAdjective + 1] = skazuemoe;
                 }
+                else //если глагола нету, то делаем его
+                {
+                    /*if (skazuemoe_index < podlejashee_index)
+                        skazuemoe_index += 1 + hasAdjective;
+                    for (int t = skazuemoe_index; t > 1 + hasAdjective; t--)
+                        curPred[t] = curPred[t - 1];
+                    curPred[hasAdjective + 1] = skazuemoe;*/
+                }
                 resultText += curPred.ToEString() + " ";
             }
             return resultText.Trim();
@@ -538,9 +546,11 @@ namespace ETEnTranslator
             Scet = Count;
             OnTick();
 
+            Hashtable suschTable = new Hashtable();
+
             for (int i = 0; i < prText.Count; i++)
             {
-                rezult += ((Predlozhenie)prText[i]).ToEnString();
+                rezult += ((Predlozhenie)prText[i]).ToEnString(ref suschTable);
             }
 
             if (this.End != null)
