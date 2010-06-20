@@ -71,12 +71,12 @@ namespace ETRTranslator
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.progressBar1 = new System.Windows.Forms.VerticalProgressBar();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.richTextBox3 = new System.Windows.Forms.RichTextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.progressBar1 = new System.Windows.Forms.VerticalProgressBar();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -385,6 +385,19 @@ namespace ETRTranslator
             this.tableLayoutPanel1.Size = new System.Drawing.Size(742, 308);
             this.tableLayoutPanel1.TabIndex = 15;
             // 
+            // progressBar1
+            // 
+            this.progressBar1.BackColor = System.Drawing.Color.Silver;
+            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.progressBar1.ForeColor = System.Drawing.Color.Gold;
+            this.progressBar1.Location = new System.Drawing.Point(725, 3);
+            this.progressBar1.Maximum = 1000;
+            this.progressBar1.Name = "progressBar1";
+            this.tableLayoutPanel1.SetRowSpan(this.progressBar1, 3);
+            this.progressBar1.Size = new System.Drawing.Size(14, 302);
+            this.progressBar1.TabIndex = 4;
+            this.progressBar1.Visible = false;
+            // 
             // richTextBox1
             // 
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -410,8 +423,8 @@ namespace ETRTranslator
             // 
             // richTextBox3
             // 
-            this.richTextBox3.Dock = System.Windows.Forms.DockStyle.Fill;            this.richTextBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.richTextBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.richTextBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox3.Font = new System.Drawing.Font("ELUNDI1", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.richTextBox3.Location = new System.Drawing.Point(3, 109);
             this.richTextBox3.Name = "richTextBox3";
             this.richTextBox3.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
@@ -433,19 +446,6 @@ namespace ETRTranslator
             this.saveFileDialog1.DefaultExt = "rtf";
             this.saveFileDialog1.Filter = "Text files (*.rtf)|*.rtf";
             this.saveFileDialog1.RestoreDirectory = true;
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.BackColor = System.Drawing.Color.Silver;
-            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar1.ForeColor = System.Drawing.Color.Gold;
-            this.progressBar1.Location = new System.Drawing.Point(725, 3);
-            this.progressBar1.Maximum = 1000;
-            this.progressBar1.Name = "progressBar1";
-            this.tableLayoutPanel1.SetRowSpan(this.progressBar1, 3);
-            this.progressBar1.Size = new System.Drawing.Size(14, 302);
-            this.progressBar1.TabIndex = 4;
-            this.progressBar1.Visible = false;
             // 
             // MainForm
             // 

@@ -404,7 +404,7 @@ using System.Data;
 			}
 		}
 
-        public string ToEnString()
+        public string ToEnString(ref Hashtable suschTable)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -430,19 +430,45 @@ using System.Data;
                         predStart -= neWords[predSlovo--].enSlovo.slovo.Length + 1;
                     }
 
-                    if(neWords[predSlovo].chastRechi == ChastRechi.Suschestvitelnoe)
+                    if (neWords[predSlovo].chastRechi == ChastRechi.Suschestvitelnoe)
+                    {
+                        //корректируем позицию, с учетом возможного артикля
+                        if (predStart > 1 && sb.ToString(predStart - 2, 2) == "a ")
+                            predStart -= 2;
+                        else if (predStart > 3 && sb.ToString(predStart - 4, 4) == "the ")
+                            predStart -= 4;
                         sb.Insert(predStart, "of ");
+                    }
                 }
 
-                if (i == 0)
-                    s.enSlovo.slovo = s.enSlovo.slovo[0].ToString().ToUpper() + s.enSlovo.slovo.Substring(1);
+                predStart = sb.Length;
+
+                //расстановка артиклей
+                if (s.chastRechi == ChastRechi.Suschestvitelnoe && (s.chislo == Chislo.Edinstvennoe || s.chislo == Chislo.Odinochnoe))
+                {
+                    if (suschTable.ContainsKey(s.enSlovo.slovo))
+                    {
+                        sb.Insert(predStart, "the ");
+                    }
+                    else
+                    {
+                        sb.Insert(predStart, "a ");
+                        suschTable.Add(s.enSlovo.slovo, true);
+                    }
+                }
 
                 sb.Append(s.enSlovo.slovo + " "/*+"("+ s.padezh + ") "*//*+"("+s.chastRechi.ToString()+") "*/);
 
                 predStart = sb.Length;
+
                 predSlovo = i;
             }
+
+            if(sb.Length > 0)
+                sb[0] = Char.ToUpper(sb[0]);
+
             String resultStr = sb.ToString().Trim();
+
             if(resultStr.Length > 0)
                 return resultStr + ". ";
             return "";
