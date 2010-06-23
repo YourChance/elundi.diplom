@@ -446,14 +446,17 @@ using System.Data;
                 //расстановка артиклей
                 if (s.chastRechi == ChastRechi.Suschestvitelnoe && (s.chislo == Chislo.Edinstvennoe || s.chislo == Chislo.Odinochnoe))
                 {
-                    if (suschTable.ContainsKey(s.enSlovo.slovo))
+                    if (predSlovo == -1 || neWords[predSlovo].chastRechi != ChastRechi.Prilagatelnoe)
                     {
-                        sb.Insert(predStart, "the ");
-                    }
-                    else
-                    {
-                        sb.Insert(predStart, "a ");
-                        suschTable.Add(s.enSlovo.slovo, true);
+                        if (suschTable.ContainsKey(s.enSlovo.slovo))
+                        {
+                            sb.Insert(predStart, "the ");
+                        }
+                        else
+                        {
+                            sb.Insert(predStart, "a ");
+                            suschTable.Add(s.enSlovo.slovo, true);
+                        }
                     }
                 }
 

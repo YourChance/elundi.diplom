@@ -30,7 +30,7 @@ namespace ETEnTranslator
         }
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-           PostMessage(handle,WM_INPUTLANGCHANGEREQUEST,0,LoadKeyboardLayout( StrCopy(Layout,'00000419'),KLF_ACTIVATE));
+           //PostMessage(handle,WM_INPUTLANGCHANGEREQUEST,0,LoadKeyboardLayout( StrCopy(Layout,'00000419'),KLF_ACTIVATE));
 
 
 
@@ -95,7 +95,7 @@ namespace ETEnTranslator
           
   //SetKeyboardLayout(eng);
 
-  SetKeyboardLayout(ru);
+  //SetKeyboardLayout(ru);
  
 
        }
